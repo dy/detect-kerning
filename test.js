@@ -83,7 +83,7 @@ let table = {
 	'f”': 121
 }
 
-let minionTable = kerning('Minion Pro')
+let minionTable = kerning(['Minion Pro', 'sans-serif'])
 
 a.equal(Object.keys(minionTable).length, Object.keys(table).length)
 

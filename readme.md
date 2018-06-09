@@ -18,8 +18,8 @@ let pairs = kerning('Roboto')
 }
 */
 
-// convert kerning for 16px font-size
-let emkern = 16 * pairs['AV'] / 1000
+// get px kerning for 16px font-size
+let px = 16 * pairs['AV'] / 1000
 ```
 
 ## API
@@ -35,4 +35,4 @@ Detect kerning pairs for the font family or stack of families and return their k
 
 ## License
 
-© 2017 Dima Yv. MIT License
+© 2018 Dmitry Yv. MIT License
