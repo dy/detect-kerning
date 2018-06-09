@@ -22,9 +22,7 @@ let pairs = kerning('Roboto')
 let px = 16 * pairs['AV'] / 1000
 ```
 
-## API
-
-### pairs = kerning(family|familyList)
+## `pairs = kerning(family|familyList)`
 
 Detect kerning pairs for the font family or stack of families and return their kerning in 1000 units/em.
 
