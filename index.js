@@ -1,36 +1,77 @@
 'use strict'
 
+
 module.exports = kerning
 
 
-let pairs = [
-	'A”', 'W.', 'P,', 'L”', 'VA', 'F.', 'YA', 'Te', 'AV', 'Vr', 'PA', 'm”', 'a”', 'FA', 'UA', 'w.', 'Yt', 'LT', 'r,', 'Xv', 'Ku', 'D,', 'D”', 'OA', 'Hv', 'T:', 'DY', 'c”', 'my', 'Ru', 'aj', 'bv', 'Sp', 'ro', 'SR', 'lp', 'ot', 'tt', 'am', 'fe', 'vo', 'xc', 'yo', 'Ix', 'e,', 'st', 'he', 'Fw', 'us', 'Ak', 'la', 'Oj', 'il', 'CO', 'bc', 'Xf', 'fr', 'F”', 'wb', 'YW', 'So', 'Co', 'VT', 'cv', 'Dv', 'OC', 'Bc', 'RX', 'T”', 'gy', 'r:', 'XA', 'ry', 'w;', 'f?', 'f”'
-]
+var ctx = document.createElement('canvas').getContext('2d')
+var asciiPairs = createPairs([32, 126])
+var cache = {}
 
-let ctx = document.createElement('canvas').getContext('2d')
+kerning.createPairs = createPairs
+kerning.cache = cache
+kerning.ascii = asciiPairs
+kerning.canvas = ctx.canvas
 
 
-function kerning (family) {
-	if (arguments.length > 1) family = [].slice.apply(arguments)
+function kerning (family, o) {
+	if (Array.isArray(family)) family = family.join(', ')
 
-	if (typeof family !== 'string') family = family.join(', ')
+	var table = {}, pairs, fs = 16, threshold = .05, cache = true
 
-	ctx.font = '16px ' + family
+	if (o) {
+		if (o.length === 2 && typeof o[0] === 'number') {
+			pairs = createPairs(o)
+		}
+		else if (Array.isArray(o)) {
+			pairs = o
+		}
+		else {
+			if (o.o) pairs = createPairs(o.o)
+			else if (o.pairs) pairs = o.pairs
 
-	let table = {}
+			if (o.fontSize) fs = o.fontSize
+			if (o.threshold != null) fs = o.threshold
+			if (o.cache != null) fs = o.cache
+		}
+	}
+	else {
+		pairs = asciiPairs
+	}
+
+	if (kerning.cache[family]) return kerning.cache[family]
+
+	ctx.font = fs + 'px ' + family
 
 	for (var i = 0; i < pairs.length; i++) {
-		let pair = pairs[i]
+		var pair = pairs[i]
+		var width = ctx.measureText(pair[0]).width + ctx.measureText(pair[1]).width
+		var kerningWidth = ctx.measureText(pair).width
 
-		let width = ctx.measureText(pair[0]).width + ctx.measureText(pair[1]).width
-
-		let kerningWidth = ctx.measureText(pair).width
-
-		if (width !== kerningWidth) {
-			let emWidth = (kerningWidth - width) / 16
+		if (Math.abs(width - kerningWidth) > fs * threshold) {
+			var emWidth = (kerningWidth - width) / fs
 			table[pair] = emWidth * 1000
 		}
 	}
 
+	if (cache) kerning.cache[family] = table
+
 	return table
+}
+
+
+function createPairs (range) {
+	var pairs = []
+
+    for (var i = range[0]; i <= range[1]; i++) {
+		var leftChar = String.fromCharCode(i)
+		for (var j = range[0]; j < range[1]; j++) {
+			var rightChar = String.fromCharCode(j)
+			var pair = leftChar + rightChar
+
+			pairs.push(pair)
+		}
+	}
+
+	return pairs
 }

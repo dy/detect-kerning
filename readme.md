@@ -22,9 +22,15 @@ let pairs = kerning('Roboto')
 let px = 16 * pairs['AV'] / 1000
 ```
 
-### `pairs = kerning(family|familyList)`
+### `pairs = kerning(family|familyList, pairs|range|options?)`
 
-Detect kerning pairs for the font family or stack of families and return their kerning in 1000 units/em.
+Detect kerning pairs for the font family or stack of families and return their kerning in 1000 units/em. Optionally pass specific kerning pairs to check, or a unicode range, by default all printable ASCII character pairs are detected from the `[32, 126]` range. Alternatively, an options object can define:
+
+* `options.pairs` - specific pairs to check;
+* `options.range` - unicode range to detect pairs from;
+* `options.fontSize` - base font size to use for check. Can affect performance, by default 16.
+* `options.threshold` - font size (em) ratio to detect kerning, by default 0.05. Values below that number can bloat kerning table size.
+* `options.cache` - cache calculated table for faster reuse.
 
 
 ## Related
