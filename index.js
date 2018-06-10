@@ -6,10 +6,8 @@ module.exports = kerning
 
 var ctx = document.createElement('canvas').getContext('2d')
 var asciiPairs = createPairs([32, 126])
-var cache = {}
 
 kerning.createPairs = createPairs
-kerning.cache = cache
 kerning.ascii = asciiPairs
 kerning.canvas = ctx.canvas
 
@@ -17,7 +15,7 @@ kerning.canvas = ctx.canvas
 function kerning (family, o) {
 	if (Array.isArray(family)) family = family.join(', ')
 
-	var table = {}, pairs, fs = 16, threshold = .05, cache = true
+	var table = {}, pairs, fs = 16, threshold = .05
 
 	if (o) {
 		if (o.length === 2 && typeof o[0] === 'number') {
@@ -32,14 +30,11 @@ function kerning (family, o) {
 
 			if (o.fontSize) fs = o.fontSize
 			if (o.threshold != null) fs = o.threshold
-			if (o.cache != null) fs = o.cache
 		}
 	}
 	else {
 		pairs = asciiPairs
 	}
-
-	if (kerning.cache[family]) return kerning.cache[family]
 
 	ctx.font = fs + 'px ' + family
 
@@ -53,8 +48,6 @@ function kerning (family, o) {
 			table[pair] = emWidth * 1000
 		}
 	}
-
-	if (cache) kerning.cache[family] = table
 
 	return table
 }

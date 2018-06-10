@@ -30,7 +30,6 @@ Detect kerning pairs for the font family or stack of families and return their k
 * `options.range` - unicode range to detect pairs from;
 * `options.fontSize` - base font size to use for check. Can affect performance, by default 16.
 * `options.threshold` - font size (em) ratio to detect kerning, by default 0.05. Values below that number can bloat kerning table size.
-* `options.cache` - cache calculated table for faster reuse.
 
 
 ## Related
