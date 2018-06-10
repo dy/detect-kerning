@@ -29,12 +29,11 @@ function kerning (family, o) {
 			else if (o.pairs) pairs = o.pairs
 
 			if (o.fontSize) fs = o.fontSize
-			if (o.threshold != null) fs = o.threshold
+			if (o.threshold != null) threshold = o.threshold
 		}
 	}
-	else {
-		pairs = asciiPairs
-	}
+
+	if (!pairs) pairs = asciiPairs
 
 	ctx.font = fs + 'px ' + family
 
@@ -42,7 +41,6 @@ function kerning (family, o) {
 		var pair = pairs[i]
 		var width = ctx.measureText(pair[0]).width + ctx.measureText(pair[1]).width
 		var kerningWidth = ctx.measureText(pair).width
-
 		if (Math.abs(width - kerningWidth) > fs * threshold) {
 			var emWidth = (kerningWidth - width) / fs
 			table[pair] = emWidth * 1000
