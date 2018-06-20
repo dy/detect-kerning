@@ -4,12 +4,12 @@
 module.exports = kerning
 
 
-var ctx = document.createElement('canvas').getContext('2d')
+var canvas = kerning.canvas = document.createElement('canvas')
+var ctx = canvas.getContext('2d')
 var asciiPairs = createPairs([32, 126])
 
 kerning.createPairs = createPairs
 kerning.ascii = asciiPairs
-kerning.canvas = ctx.canvas
 
 
 function kerning (family, o) {
